@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:DashboardMobileApp.ViewModels;assembly=DashboardMobileApp"
+             x:Class="DashboardMobileApp.Views.LoginPage">
+    <ContentPage.BindingContext>
+        <viewModels:LoginViewModel/>
+    </ContentPage.BindingContext>
+
+    <StackLayout Orientation="Vertical" BackgroundColor="#2c3e50" Spacing="0" Padding="0">
+        <StackLayout VerticalOptions="Start" HorizontalOptions="FillAndExpand" BackgroundColor="#18bc9c">
+            <Label Text="MetricsDashboard" BackgroundColor="#18bc9c" TextColor="#2c3e50" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Label BackgroundColor="#18bc9c" FontSize="Large" />
+        </StackLayout>
+
+        <Label  Text="{Binding Message}" x:Name="varMessage" BackgroundColor="#2c3e50" FontSize="Medium"  TextColor="Red"/>
+        <Entry Text="{Binding Username}" x:Name="varUsername" Placeholder="Username" BackgroundColor="#2c3e50" TextColor="#798d8f"/>
+        <Entry Text="{Binding Password}" x:Name="varPassword" IsPassword="True" Placeholder="Password" BackgroundColor="#2c3e50" TextColor="#798d8f"/>
+
+        <Button Command="{Binding LoginCommand}" Clicked="LoginButton_Clicked"
+                Text="Sign In" BackgroundColor="#18bc9c" TextColor="White"/>
+
+        <StackLayout VerticalOptions="Start" HorizontalOptions="FillAndExpand" BackgroundColor="#2c3e50">
+            <Label HorizontalOptions="Center" Text="Forgot Password?" TextColor="#798d8f" BackgroundColor="#2c3e50" FontSize="Small"/>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>
