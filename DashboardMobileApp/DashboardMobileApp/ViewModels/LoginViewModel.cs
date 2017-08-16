@@ -24,17 +24,5 @@ namespace DashboardMobileApp.ViewModels
             var isSuccess = await _apiServices.LoginAsync(Username, Password);
             return isSuccess;
         }
-
-        //public ICommand LoginCommand
-        //{
-        //    get
-        //    {
-        //        return new Command(async () =>
-        //        {
-        //            await _apiServices.LoginAsync(Username, Password);
-        //        }
-        //        );
-        //    }
-        //}
     }
 }

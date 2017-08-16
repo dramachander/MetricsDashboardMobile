@@ -1,6 +1,7 @@
 ﻿using DashboardMobileApp.Models;
 using DashboardMobileApp.ViewModels;
 using Newtonsoft.Json;
+using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,26 +17,73 @@ namespace DashboardMobileApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DashboardPage : ContentPage
     {
+        Rootobject projects;
+        Projects[] metrics;
+        string selectedProject;
+        string selectedMetric;
+
         public DashboardPage()
         {
             InitializeComponent();
         }
         protected override async void OnAppearing()
         {
-
             var client = new HttpClient();
+
+            //Call to get all Projects
             //var response = await client.GetStringAsync("http://localhost:60931/api/GetLOV/Project");
             //var response = await client.GetStringAsync("http://192.168.247.45:7002/api/GetLOV/Project"); //@office
             var response = await client.GetStringAsync("http://192.168.1.97:7002/api/GetLOV/Project"); //@home
-        
+            
+            //Call to fet all Metrics Response
+            var metricResponse = await client.GetStringAsync("http://192.168.1.97:7003/api/ProjectMetricsData");
 
-            Rootobject projects = JsonConvert.DeserializeObject<Rootobject>(response);
+            projects = JsonConvert.DeserializeObject<Rootobject>(response);
+            metrics = JsonConvert.DeserializeObject<Projects[]>(metricResponse);
 
+            //Populate the picker for all the projects
             foreach (Models.Value val in projects.value)
             {
                 projPicker.Items.Add(ToTitleCase(val.projectName));
             }
+        }
 
+        private void projPickerSelectedIndexChanged(object sender, EventArgs e)
+        {
+            var picker = (Picker)sender;
+            int selectedIndex = picker.SelectedIndex;
+
+            if (selectedIndex != -1)
+            {
+                foreach (Projects proj in metrics)
+                {
+                    if (ToTitleCase(proj.projectName) == picker.Items[selectedIndex])
+                    {
+                        metricPicker.Items.Clear();
+                        foreach (Projectmetric projMet in proj.projectMetrics)
+                        {
+                            if (!String.IsNullOrEmpty(projMet.metricName))
+                                metricPicker.Items.Add(projMet.metricName);
+                        }
+                    }
+                }
+                selectedProject = picker.Items[selectedIndex];
+            }
+        }
+
+        private void metricPickerSelectedIndexChanged(object sender, EventArgs e)
+        {
+            var picker = (Picker)sender;
+            int selectedIndex = picker.SelectedIndex;
+
+            if (selectedIndex != -1)
+            {
+                selectedMetric = picker.Items[selectedIndex];
+
+                var vSampleData = new OxyExData(selectedProject, selectedMetric, metrics);
+                this.Title = "Line Series";
+                this.BindingContext = vSampleData;
+            }
         }
 
         private string ToTitleCase(string str)
@@ -58,15 +106,5 @@ namespace DashboardMobileApp.Views
 
         }
 
-        private void projPickerSelectedIndexChanged(object sender, EventArgs e)
-        {
-            var picker = (Picker)sender;
-            int selectedIndex = picker.SelectedIndex;
-
-            if (selectedIndex != -1)
-            {
-                ProjectNameLabel.Text = picker.Items[selectedIndex];
-            }
-        }
     }
 }

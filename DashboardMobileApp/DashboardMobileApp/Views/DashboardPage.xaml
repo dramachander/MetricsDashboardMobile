@@ -1,13 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:oxy="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
+             xmlns:viewModels="clr-namespace:DashboardMobileApp.ViewModels;assembly=DashboardMobileApp"
              x:Class="DashboardMobileApp.Views.DashboardPage" Title="MetricsDashboard">
-    <StackLayout>
-        <Picker Title="Select a Project" x:Name="projPicker" SelectedIndexChanged="projPickerSelectedIndexChanged"/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <StackLayout Orientation="Horizontal">
-            <Label Text="You chose:" />
-            <Label x:Name="ProjectNameLabel" />
-        </StackLayout>
-    </StackLayout>
+        <Picker 
+            Title="Select a Project" 
+            x:Name="projPicker" 
+            SelectedIndexChanged="projPickerSelectedIndexChanged"
+            Grid.Column="0"
+            Grid.Row="0"/>
+
+        <Picker 
+            Title="Select a Metric" 
+            x:Name="metricPicker" 
+            SelectedIndexChanged="metricPickerSelectedIndexChanged"
+            Grid.Column="0"
+            Grid.Row="1"/>
+
+        <!--Label 
+            x:Name="ProjectNameLabel" 
+            Grid.Column="0"
+            Grid.Row="2"/-->
+
+        <oxy:PlotView 
+            Model="{Binding LineSeriesModel}"
+            Grid.Column="0"
+            Grid.Row="2"
+            Grid.RowSpan="7"
+            VerticalOptions="FillAndExpand"
+            HorizontalOptions="FillAndExpand"
+            />
+
+        <BoxView
+            Grid.Column="0"
+            Grid.Row="9"
+            VerticalOptions="FillAndExpand"
+            HorizontalOptions="FillAndExpand"
+            />
+    </Grid>
+
 </ContentPage>
