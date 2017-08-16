@@ -29,22 +29,28 @@ namespace DashboardMobileApp.Views
         protected override async void OnAppearing()
         {
             var client = new HttpClient();
-
-            //Call to get all Projects
-            //var response = await client.GetStringAsync("http://localhost:60931/api/GetLOV/Project");
-            //var response = await client.GetStringAsync("http://192.168.247.45:7002/api/GetLOV/Project"); //@office
-            var response = await client.GetStringAsync("http://192.168.1.97:7002/api/GetLOV/Project"); //@home
-            
-            //Call to fet all Metrics Response
-            var metricResponse = await client.GetStringAsync("http://192.168.1.97:7003/api/ProjectMetricsData");
-
-            projects = JsonConvert.DeserializeObject<Rootobject>(response);
-            metrics = JsonConvert.DeserializeObject<Projects[]>(metricResponse);
-
-            //Populate the picker for all the projects
-            foreach (Models.Value val in projects.value)
+            try
             {
-                projPicker.Items.Add(ToTitleCase(val.projectName));
+                //Call to get all Projects
+                //var response = await client.GetStringAsync("http://localhost:60931/api/GetLOV/Project");
+                //var response = await client.GetStringAsync("http://192.168.247.45:7002/api/GetLOV/Project"); //@office
+                var response = await client.GetStringAsync("http://192.168.1.97:7002/api/GetLOV/Project"); //@home
+
+                //Call to fet all Metrics Response
+                var metricResponse = await client.GetStringAsync("http://192.168.1.97:7003/api/ProjectMetricsData");
+
+                projects = JsonConvert.DeserializeObject<Rootobject>(response);
+                metrics = JsonConvert.DeserializeObject<Projects[]>(metricResponse);
+
+                //Populate the picker for all the projects
+                foreach (Models.Value val in projects.value)
+                {
+                    projPicker.Items.Add(ToTitleCase(val.projectName));
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Alert", "The services are not available right now.Please try later or contact the administrator", "OK");
             }
         }
 
